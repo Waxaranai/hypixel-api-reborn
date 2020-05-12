@@ -35,15 +35,15 @@ class SkyWars {
 			deaths: data.deaths_solo || 0,
 			winstreak: data.winstreak_solo || 0,
 			killstreak: data.killstreak_solo || 0,
-			KDRatio: Math.round(((this.solo.kills || 0) / (this.solo.deaths || 0)) * 100) / 100,
-			WLRatio: Math.round(((this.solo.wins || 0) / (this.solo.losses || 0)) * 100) / 100,
+			KDRatio: Math.round(((data.kills_solo || 0) / (data.deaths_solo || 0)) * 100) / 100,
+			WLRatio: Math.round(((data.wins_solo || 0) / (data.losses_solo || 0)) * 100) / 100,
 			insane: {
 			  kills: data.kills_solo_insane || 0,
 			  wins: data.wins_solo_insane || 0,
 			  losses: data.losses_solo_insane || 0,
 			  deaths: data.deats_solo_insane || 0,
-			  KDRatio: Math.round(((this.solo.insane.kills || 0) / (this.solo.insane.deaths || 0)) * 100) / 100,
-			  WLRatio: Math.round(((this.solo.insane.wins || 0) / (this.solo.insane.losses || 0)) * 100) / 100
+			  KDRatio: Math.round(((data.kills_solo_insane || 0) / (data.deaths_solo_insane || 0)) * 100) / 100,
+			  WLRatio: Math.round(((data.wins_solo_insane || 0) / (data.losses_solo_insane || 0)) * 100) / 100
 			}
 		};
 		this.team = {
@@ -52,15 +52,15 @@ class SkyWars {
 			wins: data.wins_team || 0,
 			losses: data.losses_team || 0,
 			deaths: data.deaths_team || 0,
-			KDRatio: Math.round(((this.team.kills || 0) / (this.team.deaths || 0)) * 100) / 100,
-			WLRatio: Math.round(((this.team.wins || 0) / (this.team.losses || 0)) * 100) / 100,
+			KDRatio: Math.round(((data.kills_team || 0) / (data.deaths_team || 0)) * 100) / 100,
+			WLRatio: Math.round(((data.wins_team || 0) / (data.losses_team || 0)) * 100) / 100,
 			insane: {
 			  kills: data.kills_team_insane || 0,
 			  wins: data.wins_team_insane || 0,
 			  losses: data.losses_team_insane || 0,
 			  deaths: data.deats_team_insane || 0,
-			  KDRatio: Math.round(((this.team.insane.kills || 0) / (this.team.insane.deaths || 0)) * 100) / 100,
-			  WLRatio: Math.round(((this.team.insane.wins || 0) / (this.team.insane.losses || 0)) * 100) / 100
+			  KDRatio: Math.round(((data.kills_team_insane || 0) / (data.deaths_team_insane || 0)) * 100) / 100,
+			  WLRatio: Math.round(((data.wins_team_insane || 0) / (data.losses_team_insane || 0)) * 100) / 100
 			}
 		};
 		this.ranked = {
