@@ -43,7 +43,7 @@ class SkyWars {
                 kills: data.kills_solo_normal || 0,
                 wins: data.wins_solo_normal || 0,
                 losses: data.losses_solo_normal || 0,
-                deaths: data.deats_solo_normal || 0,
+                deaths: data.deaths_solo_normal || 0,
                 KDRatio: Math.round(((data.kills_solo_normal || 0) / (data.deaths_solo_normal || 0)) * 100) / 100,
                 WLRatio: Math.round(((data.wins_solo_normal || 0) / (data.losses_solo_normal || 0)) * 100) / 100
             },
@@ -51,7 +51,7 @@ class SkyWars {
                 kills: data.kills_solo_insane || 0,
                 wins: data.wins_solo_insane || 0,
                 losses: data.losses_solo_insane || 0,
-                deaths: data.deats_solo_insane || 0,
+                deaths: data.deaths_solo_insane || 0,
                 KDRatio: Math.round(((data.kills_solo_insane || 0) / (data.deaths_solo_insane || 0)) * 100) / 100,
                 WLRatio: Math.round(((data.wins_solo_insane || 0) / (data.losses_solo_insane || 0)) * 100) / 100
             }
@@ -70,7 +70,7 @@ class SkyWars {
                 kills: data.kills_team_normal || 0,
                 wins: data.wins_team_normal || 0,
                 losses: data.losses_team_normal || 0,
-                deaths: data.deats_team_normal || 0,
+                deaths: data.deaths_team_normal || 0,
                 KDRatio: Math.round(((data.kills_team_normal || 0) / (data.deaths_team_normal || 0)) * 100) / 100,
                 WLRatio: Math.round(((data.wins_team_normal || 0) / (data.losses_team_normal || 0)) * 100) / 100
             },
@@ -78,7 +78,7 @@ class SkyWars {
                 kills: data.kills_team_insane || 0,
                 wins: data.wins_team_insane || 0,
                 losses: data.losses_team_insane || 0,
-                deaths: data.deats_team_insane || 0,
+                deaths: data.deaths_team_insane || 0,
                 KDRatio: Math.round(((data.kills_team_insane || 0) / (data.deaths_team_insane || 0)) * 100) / 100,
                 WLRatio: Math.round(((data.wins_team_insane || 0) / (data.losses_team_insane || 0)) * 100) / 100
             }
