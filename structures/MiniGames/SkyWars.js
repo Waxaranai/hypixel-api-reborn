@@ -1,12 +1,11 @@
-const inRange = require('../../utils/inRange');
-const SkyWarsPrestigeIcons = require('../../utils/SkyWarsPrestigeIcons');
+const inRange = require("../../utils/inRange");
+const SkyWarsPrestigeIcons = require("../../utils/SkyWarsPrestigeIcons");
 class SkyWars {
     constructor(data) {
         //General
         this.coins = data.coins || 0;
         this.souls = data.souls || 0;
         this.tokens = data.cosmetic_tokens || 0;
-
         //Stats
         this.winStreak = data.win_streak || 0;
         this.kills = data.kills || 0;
@@ -16,16 +15,13 @@ class SkyWars {
         this.lootChests = data.skywars_chests || 0;
         this.openedLootChests = data.SkyWars_openedChests || 0;
         this.heads = data.heads || 0;
-
         this.level = getSkyWarsLevel(data.skywars_experience);
-        this.levelFormatted = data.levelFormatted ? (data.levelFormatted.replace(/§([a-f]|[1-9])/gm, '')) : null;
+        this.levelFormatted = data.levelFormatted ? data.levelFormatted.replace(/§([a-f]|[1-9])/gm, "") : null;
         this.prestige = getSkyWarsPrestige(this.level);
         this.prestigeIcon = data.selected_prestige_icon ? SkyWarsPrestigeIcons[data.selected_prestige_icon] : null;
-
         this.playedGames = (data.games_solo || 0) + (data.games_team || 0) + (data.games_ranked || 0) + (data.games_mega || 0) + (data.games_mega_doubles || 0) + (data.games_lab || 0);
-
-        this.KDRatio = Math.round(((this.kills || 0) / (this.deaths || 0)) * 100) / 100;
-        this.WLRatio = Math.round(((this.wins || 0) / (this.losses || 0)) * 100) / 100;
+        this.KDRatio = Math.round(((this.kills || 0) / (this.deaths || 0)) * 100) / 100 || 0;
+        this.WLRatio = Math.round(((this.wins || 0) / (this.losses || 0)) * 100) / 100 || 0;
         //Modes
         this.solo = {
             total: {
@@ -36,24 +32,28 @@ class SkyWars {
                 deaths: data.deaths_solo || 0,
                 winstreak: data.winstreak_solo || 0,
                 killstreak: data.killstreak_solo || 0,
-                KDRatio: Math.round(((data.kills_solo || 0) / (data.deaths_solo || 0)) * 100) / 100,
-                WLRatio: Math.round(((data.wins_solo || 0) / (data.losses_solo || 0)) * 100) / 100,
+                KDRatio: Math.round(((data.kills_solo || 0) / (data.deaths_solo || 0)) * 100) / 100 || 0,
+                WLRatio: Math.round(((data.wins_solo || 0) / (data.losses_solo || 0)) * 100) / 100 || 0
             },
             normal: {
                 kills: data.kills_solo_normal || 0,
                 wins: data.wins_solo_normal || 0,
                 losses: data.losses_solo_normal || 0,
                 deaths: data.deaths_solo_normal || 0,
-                KDRatio: Math.round(((data.kills_solo_normal || 0) / (data.deaths_solo_normal || 0)) * 100) / 100,
-                WLRatio: Math.round(((data.wins_solo_normal || 0) / (data.losses_solo_normal || 0)) * 100) / 100
+                KDRatio: Math.round(
+                    ((data.kills_solo_normal || 0) / (data.deaths_solo_normal || 0)) * 100) / 100 || 0,
+                WLRatio: Math.round(
+                    ((data.wins_solo_normal || 0) / (data.losses_solo_normal || 0)) * 100) / 100 || 0
             },
             insane: {
                 kills: data.kills_solo_insane || 0,
                 wins: data.wins_solo_insane || 0,
                 losses: data.losses_solo_insane || 0,
                 deaths: data.deaths_solo_insane || 0,
-                KDRatio: Math.round(((data.kills_solo_insane || 0) / (data.deaths_solo_insane || 0)) * 100) / 100,
-                WLRatio: Math.round(((data.wins_solo_insane || 0) / (data.losses_solo_insane || 0)) * 100) / 100
+                KDRatio: Math.round(
+                    ((data.kills_solo_insane || 0) / (data.deaths_solo_insane || 0)) * 100) / 100 || 0,
+                WLRatio: Math.round(
+                    ((data.wins_solo_insane || 0) / (data.losses_solo_insane || 0)) * 100) / 100 || 0
             }
         };
         this.team = {
@@ -64,23 +64,27 @@ class SkyWars {
                 losses: data.losses_team || 0,
                 deaths: data.deaths_team || 0,
                 KDRatio: Math.round(((data.kills_team || 0) / (data.deaths_team || 0)) * 100) / 100,
-                WLRatio: Math.round(((data.wins_team || 0) / (data.losses_team || 0)) * 100) / 100,
+                WLRatio: Math.round(((data.wins_team || 0) / (data.losses_team || 0)) * 100) / 100
             },
             normal: {
                 kills: data.kills_team_normal || 0,
                 wins: data.wins_team_normal || 0,
                 losses: data.losses_team_normal || 0,
                 deaths: data.deaths_team_normal || 0,
-                KDRatio: Math.round(((data.kills_team_normal || 0) / (data.deaths_team_normal || 0)) * 100) / 100,
-                WLRatio: Math.round(((data.wins_team_normal || 0) / (data.losses_team_normal || 0)) * 100) / 100
+                KDRatio: Math.round(
+                    ((data.kills_team_normal || 0) / (data.deaths_team_normal || 0)) * 100) / 100 || 0,
+                WLRatio: Math.round(
+                    ((data.wins_team_normal || 0) / (data.losses_team_normal || 0)) * 100) / 100 || 0
             },
             insane: {
                 kills: data.kills_team_insane || 0,
                 wins: data.wins_team_insane || 0,
                 losses: data.losses_team_insane || 0,
                 deaths: data.deaths_team_insane || 0,
-                KDRatio: Math.round(((data.kills_team_insane || 0) / (data.deaths_team_insane || 0)) * 100) / 100,
-                WLRatio: Math.round(((data.wins_team_insane || 0) / (data.losses_team_insane || 0)) * 100) / 100
+                KDRatio: Math.round(
+                    ((data.kills_team_insane || 0) / (data.deaths_team_insane || 0)) * 100) / 100 || 0,
+                WLRatio: Math.round(
+                    ((data.wins_team_insane || 0) / (data.losses_team_insane || 0)) * 100) / 100 || 0
             }
         };
         this.ranked = {
@@ -89,8 +93,10 @@ class SkyWars {
             wins: data.wins_ranked || 0,
             losses: data.losses_ranked || 0,
             deaths: data.deaths_ranked || 0,
-            KDRatio: Math.round(((data.kills_ranked || 0) / (data.deaths_ranked || 0)) * 100) / 100,
-            WLRatio: Math.round(((data.wins_ranked || 0) / (data.losses_ranked || 0)) * 100) / 100
+            KDRatio: Math.round(
+                ((data.kills_ranked || 0) / (data.deaths_ranked || 0)) * 100) / 100 || 0,
+            WLRatio: Math.round(
+                ((data.wins_ranked || 0) / (data.losses_ranked || 0)) * 100) / 100 || 0
         };
         this.mega = {
             played: data.games_mega || 0,
@@ -110,33 +116,33 @@ class SkyWars {
 }
 module.exports = SkyWars;
 /**
- * 
+ *
  * @param {number} level
- * 
- * @returns {string} 
+ *
+ * @returns {string}
  */
 function getSkyWarsPrestige(level) {
     let prestige;
     if (inRange(level, 1, 9)) {
-        prestige = 'Iron';
+        prestige = "Iron";
     } else if (inRange(level, 10, 14)) {
-        prestige = 'Gold';
+        prestige = "Gold";
     } else if (inRange(level, 15, 19)) {
-        prestige = 'Diamond';
+        prestige = "Diamond";
     } else if (inRange(level, 20, 24)) {
-        prestige = 'Emerald';
+        prestige = "Emerald";
     } else if (inRange(level, 25, 29)) {
-        prestige = 'Sapphire';
+        prestige = "Sapphire";
     } else if (inRange(level, 30, 34)) {
-        prestige = 'Ruby';
+        prestige = "Ruby";
     } else if (inRange(level, 35, 39)) {
-        prestige = 'Crystal';
+        prestige = "Crystal";
     } else if (inRange(level, 40, 44)) {
-        prestige = 'Opal';
+        prestige = "Opal";
     } else if (inRange(level, 45, 49)) {
-        prestige = 'Amethyst';
+        prestige = "Amethyst";
     } else if (inRange(level, 50, 59)) {
-        prestige = 'Rainbow';
+        prestige = "Rainbow";
     } else {
         prestige = null;
     }
