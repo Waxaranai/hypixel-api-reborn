@@ -1,9 +1,6 @@
 # ![](https://i.imgur.com/cDFoQZU.png?1)
-# Hypixel API • Reborn
+# Hypixel API • Reborn [Modified]
 ---
-
-[![](https://nodei.co/npm/hypixel-api-reborn.png?mini=true)](https://www.npmjs.com/package/hypixel-api-reborn) 
-[![Build Status](https://travis-ci.org/StavZ/hypixel-api-reborn.svg?branch=master)](https://travis-ci.org/StavZ/hypixel-api-reborn)
 
 **Reborn Hypixel API Client for Node.js with many new features**
 
