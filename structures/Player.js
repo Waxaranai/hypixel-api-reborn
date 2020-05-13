@@ -28,8 +28,8 @@ class Player {
 		this.karma = data['karma'] || 0;
 		this.achievementPoints = data['achievementPoints'] || 0;
 		this.totalExperience = data['networkExp'] || 0;
-		this.level = getPlayerLevel(this.totalExperience);
-		this.socialmedia = getSocialMedia(data['socialMedia']);
+		this.level = getPlayerLevel(this.totalExperience) || 0;
+		this.socialmedia = getSocialMedia(data['socialMedia']) || [];
 
 		this.giftsSent = data['giftingMeta'] ? data['giftingMeta']['realBundlesGiven'] || 0 : null;
 		this.giftsReceived = data['giftingMeta'] ? data['giftingMeta']['realBundlesReceived'] || 0 : null;
