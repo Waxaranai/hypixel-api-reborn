@@ -5,8 +5,8 @@ const SpeedUHC = require('./MiniGames/SpeedUHC');
 const MurderMystery = require('./MiniGames/MurderMystery');
 const Duels = require('./MiniGames/Duels');
 const CrazyWalls = require('./MiniGames/CrazyWalls');
-const BuildBattle = require('./MiniGames/BuildBattle')
-const MegaWalls = require('./MiniGames/MegaWalls')
+const BuildBattle = require('./MiniGames/BuildBattle');
+const MegaWalls = require('./MiniGames/MegaWalls');
 
 class Player {
 	/**
@@ -19,10 +19,12 @@ class Player {
 		this.uuid = data['uuid'];
 		this.history = data['knownAliases'];
 		this.rank = getRank(data);
-
-		this.lastLogin = data['lastLogin'];
-		this.firstLogin = data['firstLogin'];
-
+		this.realRank = data['rank'] || null;
+		this.mcVersion = data['mcVersionRp'] || null;
+		this.lastLogin = data['lastLogin'] || null;
+		this.firstLogin = data['firstLogin'] || null;
+		this.recentlyPlayedGame = data['mostRecentGameType'];
+    
 		this.karma = data['karma'] || 0;
 		this.achievementPoints = data['achievementPoints'] || 0;
 		this.totalExperience = data['networkExp'] || 0;
@@ -107,13 +109,13 @@ function getRank(player) {
  * @returns {number}
  */
 function getPlayerLevel(exp) {
-	let BASE = 10000;
-	let GROWTH = 2500;
-	let REVERSE_PQ_PREFIX = -(BASE - 0.5 * GROWTH) / GROWTH;
-	let REVERSE_CONST = REVERSE_PQ_PREFIX * REVERSE_PQ_PREFIX;
-	let GROWTH_DIVIDES_2 = 2 / GROWTH;
-	let num = 1 + REVERSE_PQ_PREFIX + Math.sqrt(REVERSE_CONST + GROWTH_DIVIDES_2 * exp);
-	let level = Math.round(num * 100) / 100;
+	const BASE = 10000;
+	const GROWTH = 2500;
+	const REVERSE_PQ_PREFIX = - (BASE - 0.5 * GROWTH) / GROWTH;
+	const REVERSE_CONST = REVERSE_PQ_PREFIX * REVERSE_PQ_PREFIX;
+	const GROWTH_DIVIDES_2 = 2 / GROWTH;
+	const num = 1 + REVERSE_PQ_PREFIX + Math.sqrt(REVERSE_CONST + GROWTH_DIVIDES_2 * exp);
+	const level = Math.round(num * 100) / 100;
 	return level;
 }
 
@@ -126,10 +128,10 @@ function getPlayerLevel(exp) {
 function getSocialMedia(data) {
 	if (!data) return null;
 
-	let links = data.links;
+	const links = data.links;
 
 	if (!links) return null;
-	let media = [];
+	const media = [];
 	if (!links) return;
 
 	if (links) {
