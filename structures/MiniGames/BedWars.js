@@ -6,7 +6,7 @@ class BedWars {
         //Stats
         this.winstreak = data.winstreak;
         this.kills = data.kills_bedwars || 0,
-            this.finalKills = data.final_kills_bedwars || 0;
+        this.finalKills = data.final_kills_bedwars || 0;
         this.wins = data.wins_bedwars || 0;
         this.losses = data.losses_bedwars || 0;
         this.playedGames = data.games_played_bedwars || 0;
@@ -26,7 +26,7 @@ class BedWars {
             BLRatio: Math.round(((data.eight_one_beds_broken_bedwars || 0) / (data.eight_one_beds_lost_bedwars || 0)) * 100) / 100 || 0
         };
         this.KDRatio = Math.round(((this.kills || 0) / (this.deaths || 0)) * 100) / 100 || 0;
-        this.finalKDRatio = Math.round(((this.finalkills || 0) / (this.finalDeaths || 0)) * 100) / 100 || 0;
+        this.finalKDRatio = Math.round(((data.final_kills_bedwars || 0) / (data.final_deaths_bedwars || 0)) * 100) / 100 || 0;
         this.WLRatio = Math.round(((this.wins || 0) / (this.losses || 0)) * 100) / 100 || 0;
         //Modes
         this.solo = {
