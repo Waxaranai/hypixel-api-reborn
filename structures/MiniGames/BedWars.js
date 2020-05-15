@@ -45,7 +45,7 @@ class BedWars {
         };
         //Average kills, final kills, beds broken per game
         const average = {
-          finalKills: isNaN(stats.finalKills / stats.playedGames) ? 0 : (stats.finalKills / stats.playedGames).toFixex(2),
+          finalKills: isNaN(stats.finalKills / stats.playedGames) ? 0 : (stats.finalKills / stats.playedGames).toFixed(2),
           kills: isNaN(stats.kills / stats.playedGames) ? 0 : (stats.kills / stats.playedGames).toFixed(2),
           bedsBroken: isNaN(beds.broken / stats.playedGames) ? 0 : (beds.broken / stats.playedGames).toFixed(2)
         };
