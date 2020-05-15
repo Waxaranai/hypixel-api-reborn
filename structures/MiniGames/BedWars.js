@@ -1,38 +1,68 @@
 const inRange = require('../../utils/inRange');
 class BedWars {
     constructor(data) {
-        //General
-        this.coins = data.coins || 0;
-        //Stats
-        this.winstreak = data.winstreak || 0;
-        this.kills = data.kills_bedwars || 0,
-        this.finalKills = data.final_kills_bedwars || 0;
-        this.wins = data.wins_bedwars || 0;
-        this.losses = data.losses_bedwars || 0;
-        this.playedGames = data.games_played_bedwars || 0;
-        this.level = getLevelForExp(data.Experience) ||  0;
-        this.prestige = getBedWarsPrestige(this.level) || 0;
-        this.deaths = data.deaths_bedwars || 0;
-        this.finalDeaths = data.final_deaths_bedwars || 0;
+        //General Stats
+        const stats = {
+          coins: data.coins ? data.coins : 0,
+          level: data.Experience ? getLevelForExp(data.Experience) : 0,
+          prestige: data.Experience ? getBedWarsPrestige(getLevelForExp(data.Experience)) : 0,
+          playedGames: data.games_played_bedwars ? data.games_played_bedwars : 0,
+          wins: data.wins_bedwars ? data.wins_bedwars : 0,
+          winstreak: data.winstreak ? data.winstreak : 0,
+          kills: data.kills_bedwars ? data.kills_bedwars : 0,
+          finalKills: data.final_kills_bedwars ? data.final_kills_bedwars : 0,
+          losses: data.losses_bedwars ? data.losses_bedwars : 0,
+          deaths: data.deaths_bedwars ? data.deaths_bedwars : 0,
+          finalDeaths: data.final_deaths_bedwars  ? data.final_deaths_bedwars : 0,
+        };
+        this.coins = stats.coins;
+        this.level = stats.level;
+        this.prestige = stats.prestige;
+        this.playedGames = stats.playedGames;
+        this.wins = stats.wins;
+        this.winstreak = stats.winstreak;
+        this.kills = stats.kills,
+        this.finalKills = stats.finalKills;
+        this.losses = stats.losses;
+        this.deaths = stats.deaths;
+        this.finalDeaths = stats.finalDeaths;
         this.collectedItemsTotal = {
-            iron: data.iron_resources_collected_bedwars || 0,
-            gold: data.gold_resources_collected_bedwars || 0,
-            diamond: data.diamond_resources_collected_bedwars || 0,
-            emerald: data.emerald_resources_collected_bedwars || 0
+            iron: data.iron_resources_collected_bedwars ? data.iron_resources_collected_bedwars : 0,
+            gold: data.gold_resources_collected_bedwars ? data.gold_resources_collected_bedwars : 0,
+            diamond: data.diamond_resources_collected_bedwars ? data.diamond_resources_collected_bedwars : 0,
+            emerald: data.emerald_resources_collected_bedwars ? data.emerald_resources_collected_bedwars : 0
+        };
+        //Beds Stats
+        const beds = {
+            lost: data.beds_lost_bedwars ? data.beds_lost_bedwars : 0,
+            broken: data.beds_broken_bedwars ? data.beds_broken_bedwars : 0,
+            BLRatio: isNaN(Math.round(((data.beds_broken_bedwars ? data.beds_broken_bedwars : 0) / (data.beds_lost_bedwars ? data.beds_lost_bedwars : 0)) * 100) / 100) ? 0 : Math.round(((data.beds_broken_bedwars ? data.beds_broken_bedwars : 0) / (data.beds_lost_bedwars ? data.beds_lost_bedwars : 0)) * 100) / 100
         };
         this.beds = {
-            lost: data.beds_lost_bedwars || 0,
-            broken: data.beds_broken_bedwars || 0,
-            BLRatio: Math.round(((data.eight_one_beds_broken_bedwars || 0) / (data.eight_one_beds_lost_bedwars || 0)) * 100) / 100 || 0
+          lost: beds.lost,
+          broken: beds.broken,
+          BLRatio: beds.BLRatio
+        };
+        //Average kills, final kills, beds broken per game
+        const average = {
+          finalKills: isNaN(stats.finalKills / stats.playedGames) ? 0 : (stats.finalKills / stats.playedGames).toFixex(2),
+          kills: isNaN(stats.kills / stats.playedGames) ? 0 : (stats.kills / stats.playedGames).toFixed(2),
+          bedsBroken: isNaN(beds.broken / stats.playedGames) ? 0 : (beds.broken / stats.playedGames).toFixed(2)
         };
         this.avg = {
-          finalKills: ((data.final_kills_bedwars || 0) / (data.games_played_bedwars || 0)).toFixed(2) || 0,
-          kills: ((data.kills_bedwars || 0) / (data.games_played_bedwars || 0)).toFixed(2) || 0,
-          bedsBroken: ((data.beds_broken_bedwars || 0) / (data.games_played_bedwars || 0)).toFixed(2) || 0,
+          kills: average.kills,
+          finalKills: average.finalKills,
+          bedsBroken: average.bedsBroken
         };
-        this.KDRatio = Math.round(((this.kills || 0) / (this.deaths || 0)) * 100) / 100 || 0;
-        this.finalKDRatio = Math.round(((data.final_kills_bedwars || 0) / (data.final_deaths_bedwars || 0)) * 100) / 100 || 0;
-        this.WLRatio = Math.round(((this.wins || 0) / (this.losses || 0)) * 100) / 100 || 0;
+        // KDR, Final KDR, WLR
+        const ratio = {
+          KDR: isNaN(Math.round((stats.kills / stats.deaths) * 100) / 100) ? 0 : Math.round((stats.kills / stats.deaths) * 100) / 100,
+          finalKDR: isNaN(Math.round((stats.finalKills / stats.finalDeaths) * 100) / 100) ? 0 : Math.round((stats.finalKills / stats.finalDeaths) * 100) / 100,
+          WLR: isNaN(Math.round((stats.wins / stats.losses) * 100) / 100) ? 0 : Math.round((stats.wins / stats.losses) * 100) / 100
+        };
+        this.KDRatio = ratio.KDR;
+        this.finalKDRatio = ratio.finalKDR;
+        this.WLRatio = ratio.WLR;
         //Modes
         this.solo = {
             winstreak: data.eight_one_winstreak || 0,
@@ -42,17 +72,18 @@ class BedWars {
             wins: data.eight_one_wins_bedwars || 0,
             losses: data.eight_one_losses_bedwars || 0,
             played: data.eight_one_games_played_bedwars || 0,
-            KDRatio: Math.round(((data.eight_one_kills_bedwars || 0) / (data.eight_one_deaths_bedwars || 0)) * 100) / 100 || 0,
-            finalKDRatio: Math.round(((data.eight_one_final_kills_bedwars || 0) / (data.eight_one_final_deaths_bedwars || 0)) * 100) / 100 || 0,
-            WLRatio: Math.round(((data.eight_one_wins_bedwars || 0) / (data.eight_one_losses_bedwars || 0)) * 100) / 100 || 0,
+            KDRatio: isNaN(Math.round((data.eight_one_kills_bedwars / data.eight_one_deaths_bedwars) * 100) / 100) ? 0 : Math.round((data.eight_one_kills_bedwars / data.eight_one_deaths_bedwars) * 100) / 100 ,
+            finalKDRatio: isNaN(Math.round((data.eight_one_final_kills_bedwars / data.eight_one_final_deaths_bedwars) * 100) / 100) ? 0 : Math.round((data.eight_one_final_kills_bedwars / data.eight_one_final_deaths_bedwars) * 100) / 100,
+            WLRatio: isNaN(Math.round((data.eight_one_wins_bedwars / data.eight_one_losses_bedwars) * 100) / 100) ? 0 : Math.round((data.eight_one_wins_bedwars / data.eight_one_losses_bedwars) * 100) / 100,
             avg: {
-                finalKills: ((data.eight_one_final_kills_bedwars || 0) / (data.eight_one_games_played_bedwars || 0)).toFixed(2) || 0,
-                bedsBroken: ((data.eight_one_beds_broken_bedwars || 0) / (data.eight_one_games_played_bedwars || 0)).toFixed(2) || 0
+                kills: isNaN(data.eight_one_kills_bedwars / data.eight_one_games_played_bedwars) ? 0 : (data.eight_one_kills_bedwars / data.eight_one_games_played_bedwars).toFixed(2),
+                finalKills: isNaN(data.eight_one_final_kills_bedwars / data.eight_one_games_played_bedwars) ? 0 : (data.eight_one_final_kills_bedwars / data.eight_one_games_played_bedwars).toFixed(2),
+                bedsBroken: isNaN(data.eight_one_beds_broken_bedwars / data.eight_one_games_played_bedwars) ? 0 : (data.eight_one_beds_broken_bedwars / data.eight_one_games_played_bedwars).toFixed(2)
             },
             beds: {
                 lost: data.eight_one_beds_lost_bedwars || 0,
                 broken: data.eight_one_beds_broken_bedwars || 0,
-                BLRatio: Math.round(((data.eight_one_beds_broken_bedwars || 0) / (data.eight_one_beds_lost_bedwars || 0)) * 100) / 100 || 0
+                BLRatio: isNaN(Math.round((data.eight_one_beds_broken_bedwars / data.eight_one_beds_lost_bedwars) * 100) / 100) ? 0 : Math.round((data.eight_one_beds_broken_bedwars / data.eight_one_beds_lost_bedwars) * 100) / 100
             }
         };
         this.doubles = {
@@ -63,17 +94,18 @@ class BedWars {
             wins: data.eight_two_wins_bedwars || 0,
             losses: data.eight_two_losses_bedwars || 0,
             played: data.eight_two_games_played_bedwars || 0,
-            KDRatio: Math.round(((data.eight_two_kills_bedwars || 0) / (data.eight_two_deaths_bedwars || 0)) * 100) / 100 || 0,
-            finalKDRatio: Math.round(((data.eight_two_final_kills_bedwars || 0) / (data.eight_two_final_deaths_bedwars || 0)) * 100) / 100 || 0,
-            WLRatio: Math.round(((data.eight_two_wins_bedwars || 0) / (data.eight_two_losses_bedwars || 0)) * 100) / 100 || 0,
+            KDRatio: isNaN(Math.round((data.eight_two_kills_bedwars / data.eight_two_deaths_bedwars) * 100) / 100) ? 0 : Math.round((data.eight_two_kills_bedwars / data.eight_two_deaths_bedwars) * 100) / 100 ,
+            finalKDRatio: isNaN(Math.round((data.eight_two_final_kills_bedwars / data.eight_two_final_deaths_bedwars) * 100) / 100) ? 0 : Math.round((data.eight_two_final_kills_bedwars / data.eight_two_final_deaths_bedwars) * 100) / 100,
+            WLRatio: isNaN(Math.round((data.eight_two_wins_bedwars / data.eight_two_losses_bedwars) * 100) / 100) ? 0 : Math.round((data.eight_two_wins_bedwars / data.eight_two_losses_bedwars) * 100) / 100,
             avg: {
-                finalKills: ((data.eight_two_final_kills_bedwars || 0) / (data.eight_two_games_played_bedwars || 0)).toFixed(2) || 0,
-                bedsBroken: ((data.eight_two_beds_broken_bedwars || 0) / (data.eight_two_games_played_bedwars || 0)).toFixed(2) || 0
+                kills: isNaN(data.eight_two_kills_bedwars / data.eight_two_games_played_bedwars) ? 0 : (data.eight_two_kills_bedwars / data.eight_two_games_played_bedwars).toFixed(2),
+                finalKills: isNaN(data.eight_two_final_kills_bedwars / data.eight_two_games_played_bedwars) ? 0 : (data.eight_two_final_kills_bedwars / data.eight_two_games_played_bedwars).toFixed(2),
+                bedsBroken: isNaN(data.eight_two_beds_broken_bedwars / data.eight_two_games_played_bedwars) ? 0 : (data.eight_two_beds_broken_bedwars / data.eight_two_games_played_bedwars).toFixed(2)
             },
             beds: {
                 lost: data.eight_two_beds_lost_bedwars || 0,
                 broken: data.eight_two_beds_broken_bedwars || 0,
-                BLRatio: Math.round(((data.eight_two_beds_broken_bedwars || 0) / (data.eight_two_beds_lost_bedwars || 0)) * 100) / 100 || 0
+                BLRatio: isNaN(Math.round((data.eight_two_beds_broken_bedwars / data.eight_two_beds_lost_bedwars) * 100) / 100) ? 0 : Math.round((data.eight_two_beds_broken_bedwars / data.eight_two_beds_lost_bedwars) * 100) / 100
             }
         };
         this.three = {
@@ -84,17 +116,18 @@ class BedWars {
             wins: data.four_three_wins_bedwars || 0,
             losses: data.four_three_losses_bedwars || 0,
             played: data.four_three_games_played_bedwars || 0,
-            KDRatio: Math.round(((data.four_three_kills_bedwars || 0) / (data.four_three_deaths_bedwars || 0)) * 100) / 100 || 0,
-            finalKDRatio: Math.round(((data.four_three_final_kills_bedwars || 0) / (data.four_three_final_deaths_bedwars || 0)) * 100) / 100 || 0,
-            WLRatio: Math.round(((data.four_three_wins_bedwars || 0) / (data.four_three_losses_bedwars || 0)) * 100) / 100 || 0,
+            KDRatio: isNaN(Math.round((data.four_three_kills_bedwars / data.four_three_deaths_bedwars) * 100) / 100) ? 0 : Math.round((data.four_three_kills_bedwars / data.four_three_deaths_bedwars) * 100) / 100 ,
+            finalKDRatio: isNaN(Math.round((data.four_three_final_kills_bedwars / data.four_three_final_deaths_bedwars) * 100) / 100) ? 0 : Math.round((data.four_three_final_kills_bedwars / data.four_three_final_deaths_bedwars) * 100) / 100,
+            WLRatio: isNaN(Math.round((data.four_three_wins_bedwars / data.four_three_losses_bedwars) * 100) / 100) ? 0 : Math.round((data.four_three_wins_bedwars / data.four_three_losses_bedwars) * 100) / 100,
             avg: {
-                finalKills: ((data.four_three_final_kills_bedwars || 0) / (data.four_three_games_played_bedwars || 0)).toFixed(2) || 0,
-                bedsBroken: ((data.four_three_beds_broken_bedwars || 0) / (data.four_three_games_played_bedwars || 0)).toFixed(2) || 0
+                kills: isNaN(data.four_three_kills_bedwars / data.four_three_games_played_bedwars) ? 0 : (data.four_three_kills_bedwars / data.four_three_games_played_bedwars).toFixed(2),
+                finalKills: isNaN(data.four_three_final_kills_bedwars / data.four_three_games_played_bedwars) ? 0 : (data.four_three_final_kills_bedwars / data.four_three_games_played_bedwars).toFixed(2),
+                bedsBroken: isNaN(data.four_three_beds_broken_bedwars / data.four_three_games_played_bedwars) ? 0 : (data.four_three_beds_broken_bedwars / data.four_three_games_played_bedwars).toFixed(2)
             },
             beds: {
                 lost: data.four_three_beds_lost_bedwars || 0,
                 broken: data.four_three_beds_broken_bedwars || 0,
-                BLRatio: Math.round(((data.four_three_beds_broken_bedwars || 0) / (data.four_three_beds_lost_bedwars || 0)) * 100) / 100 || 0
+                BLRatio: isNaN(Math.round((data.four_three_beds_broken_bedwars / data.four_three_beds_lost_bedwars) * 100) / 100) ? 0 : Math.round((data.four_three_beds_broken_bedwars / data.four_three_beds_lost_bedwars) * 100) / 100
             }
         };
         this.four = {
@@ -105,17 +138,18 @@ class BedWars {
             wins: data.four_four_wins_bedwars || 0,
             losses: data.four_four_losses_bedwars || 0,
             played: data.four_four_games_played_bedwars || 0,
-            KDRatio: Math.round(((data.four_four_kills_bedwars || 0) / (data.four_four_deaths_bedwars || 0)) * 100) / 100 || 0,
-            finalKDRatio: Math.round(((data.four_four_final_kills_bedwars || 0) / (data.four_four_final_deaths_bedwars || 0)) * 100) / 100 || 0,
-            WLRatio: Math.round(((data.four_four_wins_bedwars || 0) / (data.four_four_losses_bedwars || 0)) * 100) / 100 || 0,
+            KDRatio: isNaN(Math.round((data.four_four_kills_bedwars / data.four_four_deaths_bedwars) * 100) / 100) ? 0 : Math.round((data.four_four_kills_bedwars / data.four_four_deaths_bedwars) * 100) / 100 ,
+            finalKDRatio: isNaN(Math.round((data.four_four_final_kills_bedwars / data.four_four_final_deaths_bedwars) * 100) / 100) ? 0 : Math.round((data.four_four_final_kills_bedwars / data.four_four_final_deaths_bedwars) * 100) / 100,
+            WLRatio: isNaN(Math.round((data.four_four_wins_bedwars / data.four_four_losses_bedwars) * 100) / 100) ? 0 : Math.round((data.four_four_wins_bedwars / data.four_four_losses_bedwars) * 100) / 100,
             avg: {
-                finalKills: ((data.four_four_final_kills_bedwars || 0) / (data.four_four_games_played_bedwars || 0)).toFixed(2) || 0,
-                bedsBroken: ((data.four_four_beds_broken_bedwars || 0) / (data.four_four_games_played_bedwars || 0)).toFixed(2) || 0
+                kills: isNaN(data.four_four_kills_bedwars / data.four_four_games_played_bedwars) ? 0 : (data.four_four_kills_bedwars / data.four_four_games_played_bedwars).toFixed(2),
+                finalKills: isNaN(data.four_four_final_kills_bedwars / data.four_four_games_played_bedwars) ? 0 : (data.four_four_final_kills_bedwars / data.four_four_games_played_bedwars).toFixed(2),
+                bedsBroken: isNaN(data.four_four_beds_broken_bedwars / data.four_four_games_played_bedwars) ? 0 : (data.four_four_beds_broken_bedwars / data.four_four_games_played_bedwars).toFixed(2)
             },
             beds: {
                 lost: data.four_four_beds_lost_bedwars || 0,
                 broken: data.four_four_beds_broken_bedwars || 0,
-                BLRatio: Math.round(((data.four_four_beds_broken_bedwars || 0) / (data.four_four_beds_lost_bedwars || 0)) * 100) / 100 || 0
+                BLRatio: isNaN(Math.round((data.four_four_beds_broken_bedwars / data.four_four_beds_lost_bedwars) * 100) / 100) ? 0 : Math.round((data.four_four_beds_broken_bedwars / data.four_four_beds_lost_bedwars) * 100) / 100
             }
         };
     }
