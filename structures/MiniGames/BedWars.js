@@ -2,16 +2,16 @@ const inRange = require('../../utils/inRange');
 class BedWars {
     constructor(data) {
         //General
-        this.coins = data.coins;
+        this.coins = data.coins || 0;
         //Stats
-        this.winstreak = data.winstreak;
+        this.winstreak = data.winstreak || 0;
         this.kills = data.kills_bedwars || 0,
         this.finalKills = data.final_kills_bedwars || 0;
         this.wins = data.wins_bedwars || 0;
         this.losses = data.losses_bedwars || 0;
         this.playedGames = data.games_played_bedwars || 0;
-        this.level = getLevelForExp(data.Experience);
-        this.prestige = getBedWarsPrestige(this.level);
+        this.level = getLevelForExp(data.Experience) ||  0;
+        this.prestige = getBedWarsPrestige(this.level) || 0;
         this.deaths = data.deaths_bedwars || 0;
         this.finalDeaths = data.final_deaths_bedwars || 0;
         this.collectedItemsTotal = {
@@ -24,6 +24,11 @@ class BedWars {
             lost: data.beds_lost_bedwars || 0,
             broken: data.beds_broken_bedwars || 0,
             BLRatio: Math.round(((data.eight_one_beds_broken_bedwars || 0) / (data.eight_one_beds_lost_bedwars || 0)) * 100) / 100 || 0
+        };
+        this.avg = {
+          finalKills: ((data.final_kills_bedwars || 0) / (data.games_played_bedwars || 0)).toFixed(2) || 0,
+          kills: ((data.kills_bedwars || 0) / (data.games_played_bedwars || 0)).toFixed(2) || 0,
+          bedsBroken: ((data.beds_broken_bedwars || 0) / (data.games_played_bedwars || 0)).toFixed(2) || 0,
         };
         this.KDRatio = Math.round(((this.kills || 0) / (this.deaths || 0)) * 100) / 100 || 0;
         this.finalKDRatio = Math.round(((data.final_kills_bedwars || 0) / (data.final_deaths_bedwars || 0)) * 100) / 100 || 0;
