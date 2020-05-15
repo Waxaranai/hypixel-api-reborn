@@ -7,7 +7,7 @@ const Duels = require('./MiniGames/Duels');
 const CrazyWalls = require('./MiniGames/CrazyWalls');
 const BuildBattle = require('./MiniGames/BuildBattle');
 const MegaWalls = require('./MiniGames/MegaWalls');
-
+const MiniGames = require('../utils/MiniGames');
 class Player {
 	/**
      * 
@@ -23,7 +23,7 @@ class Player {
 		this.mcVersion = data['mcVersionRp'] || null;
 		this.lastLogin = data['lastLogin'] || null;
 		this.firstLogin = data['firstLogin'] || null;
-		this.recentlyPlayedGame = data['mostRecentGameType'];
+		this.recentlyPlayedGame = data['mostRecentGameType'] ? MiniGames[data['mostRecentGameType']] : null;
     
 		this.karma = data['karma'] || 0;
 		this.achievementPoints = data['achievementPoints'] || 0;
@@ -34,9 +34,7 @@ class Player {
 		this.giftsSent = data['giftingMeta'] ? data['giftingMeta']['realBundlesGiven'] || 0 : null;
 		this.giftsReceived = data['giftingMeta'] ? data['giftingMeta']['realBundlesReceived'] || 0 : null;
 
-		this.isOnline = () => {
-			return this.lastLogin > data['lastLogout'] ? true : false;
-		};
+		this.isOnline = this.lastLogin > data['lastLogout'] ? true : false;
         
 		this.stats = (data['stats'] ? {
 			skywars: (data['stats']['SkyWars'] ? new SkyWars(data['stats']['SkyWars']) : null),
